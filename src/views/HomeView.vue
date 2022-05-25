@@ -5,7 +5,14 @@
     <button @click="pesquisar()">Clique aqui</button>
     <img v-show="this.img" :src="this.img" alt="" />
     <h1 v-show="this.name">{{ this.name }}</h1>
-    <h1 v-show="this.ability">{{ this.ability }}</h1>
+    <h1
+      v-for="(ab, key) in ability"
+      :key="key"
+      :value="ability"
+      v-show="ability"
+    >
+      {{ ab.name }}
+    </h1>
   </div>
 </template>
 
@@ -32,11 +39,9 @@ export default {
 
       //Passando os valores da api para as variáveis
       this.name = res.name;
-      this.ability = res.abilities[0].ability.name;
+      this.ability = res.abilities.map((valor) => valor.ability);
       this.weight = res.weight;
       this.img = res.sprites.front_default;
-
-      console.log(res.weight);
     },
     mostrarConsole() {
       console.log(this.valor);
@@ -48,4 +53,10 @@ export default {
 };
 </script>
 
-
+<style scoped>
+.home {
+  border-style: solid;
+  width: 480px;
+  margin: 0 auto;
+}
+</style>
