@@ -1,26 +1,20 @@
 <template>
-  <router-view/>
+  <router-view />
 </template>
 
 <style>
+* {
+  font-family: "Roboto", sans-serif;
+  margin: 0;
+  padding: 0;
+}
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-}
-
-nav {
-  padding: 30px;
-}
-
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-nav a.router-link-exact-active {
-  color: #42b983;
+  color: black;
+  background-image: url("./img/wallpaper.png");
+  background-position: 0 -100px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
 }
 </style>

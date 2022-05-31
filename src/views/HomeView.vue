@@ -1,29 +1,71 @@
 <template>
+  <img src="../img/Pokemon_animated.webp" alt="" />
   <div class="home">
-    <h1>charizard</h1>
-    <input type="text" name="" id="" v-model="valor" />
-    <button @click="pesquisar(img)">Clique aqui</button>
-    <div>
-      <img v-show="img" :src="img" alt="" />
+    <h1>blastoise</h1>
+    <div class="submit">
+      <TextInput v-model="valor" @keyup.enter="pesquisar()" />
+      <Button name="Buscar Pokemon" @click="pesquisar()" />
     </div>
-    <p v-show="name">Nome {{ name }}</p>
-    <p v-show="weight">Peso: {{ weight }}kg</p>
-    <div v-show="ability">
-      Habilidades:
-      <p v-for="(ab, key) in ability" :key="key" v-show="ability">
-        {{ ab.name }}
-      </p>
+    <div v-show="img" class="pokemonContainer">
+      <img :src="img" alt="" class="pokemonImage" />
+      <div class="pokemonProfile">
+        <p>#{{ order }}</p>
+        <p class="pokemonName">{{ name }}</p>
+        <p v-show="type" v-for="(tp, key) in type" :key="key">
+          {{ tp.name }}
+        </p>
+      </div>
     </div>
-    <p v-show="type" v-for="(tp, key) in type" :key="key">
-      {{ tp.name }}
-    </p>
+    <p class="subTitle" v-show="weight">Pokedéx Data</p>
+    <div class="pokemonAllStats">
+      <div class="pokemonStats">
+        <div>
+          <div class="pokemonDataTable" v-show="ability">
+            <p class="dataTitle">Habilidades:</p>
+            <p
+              class="pokemonData"
+              v-for="(ab, key) in ability"
+              :key="key"
+              v-show="ability"
+            >
+              {{ ab.name }}
+            </p>
+          </div>
+        </div>
+        <div class="pokemonDataTable" v-show="weight">
+          <p class="dataTitle">Peso:</p>
+          <p class="pokemonData" v-show="weight">{{ weight }}kg</p>
+        </div>
+        <div class="pokemonDataTable" v-show="weight">
+          <p class="dataTitle">Height:</p>
+          <p class="pokemonData" v-show="height">{{ height }}m</p>
+        </div>
+      </div>
+
+      <div class="pokemonStats2">
+        <div class="pokemonStatsTable">
+          <div class="dataTitle" v-for="(name, key) in statsName" :key="key">
+            {{ name.name }}:
+          </div>
+        </div>
+        <div class="pokemonStatsTableValue">
+          <div
+            class="pokemonData"
+            v-for="(value, key) in statsValue"
+            :key="key"
+          >
+            {{ value.base_stat }}
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from "@/components/HelloWorld.vue";
-import { prominent } from "color.js";
-import { getAverageColor } from "fast-average-color";
+import analyze from "rgbaster";
+import Button from "@/components/Button.vue";
+import TextInput from "@/components/textInput.vue";
 
 export default {
   name: "HomeView",
@@ -32,10 +74,15 @@ export default {
       valor: null,
       name: null,
       ability: null,
-      weight: null,
+      height: null,
       img: null,
       weight: null,
       type: null,
+      bgColor: null,
+      pokemons: null,
+      order: null,
+      statsName: null,
+      statsValue: null,
     };
   },
   methods: {
@@ -45,33 +92,114 @@ export default {
       );
       const res = await req.json();
 
+      //Pegando a cor predominante do pokemon
+      const backgroundColor = await analyze(res.sprites.front_default);
+      this.bgColor = await backgroundColor[0].color;
+
       //Passando os valores da api para as variáveis
       this.name = res.name;
       this.ability = res.abilities.map((value) => value.ability);
       this.type = res.types.map((value) => value.type);
-      this.weight = res.weight;
-      this.img = res.sprites.front_default;
+      this.height = (res.height * 10) / 100;
+      this.img = res.sprites.other["official-artwork"].front_default;
       this.weight = res.weight / 10;
-
-      const color = getAverageColor(res.sprites.front_default);
-      console.log(color);
-    },
-    async pickColor(img) {
-      const color = await getAverageColor(img);
-      console.log(color);
+      this.order = res.order;
+      this.statsValue = res.stats.map((value) => value);
+      this.statsName = res.stats.map((value) => value.stat);
     },
   },
+  mounted() {},
   components: {
-    HelloWorld,
+    Button,
+    TextInput,
   },
 };
 </script>
 
 <style scoped>
+* {
+  margin: 0;
+  padding: 0;
+}
+.pokemonAllStats {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+.pokemonStats2 {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  width: 280px;
+  margin: 0 auto;
+}
+.pokemonStats {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  width: 280px;
+  margin: 0 auto;
+}
+.pokemonStatsTableValue {
+}
+.pokemonStats p {
+  margin: 5px;
+}
+
+.pokemonDataTable {
+  display: flex;
+}
+.submit {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 250px;
+  align-items: center;
+  margin: 2px auto;
+}
+.pokemonData {
+  text-transform: capitalize;
+}
+.subTitle {
+  color: v-bind("bgColor");
+  font-weight: bold;
+}
+.dataTitle {
+  font-weight: bold;
+  display: flex;
+  text-transform: capitalize;
+}
+.pokemonProfile {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-transform: capitalize;
+  font-weight: bold;
+  width: 180px;
+  font-size: 14px;
+  color: black;
+}
+.pokemonName {
+  font-size: 24px;
+}
 .home {
   min-height: 200px;
   border-style: solid;
-  width: 480px;
+  width: 500px;
   margin: 0 auto;
+  background-color: white;
+  background-image: linear-gradient(var(--9ea40744-bgColor) 10%, white 80%);
+}
+.pokemonContainer {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  border-radius: 10px;
+  /* background-image: linear-gradient(v-bind("bgColor") 60%, white 100%); */
+}
+
+.pokemonImage {
+  width: 200px;
+  height: 200px;
 }
 </style>
