@@ -1,10 +1,10 @@
 <template>
   <img src="../img/Pokemon_animated.webp" alt="" />
   <div class="home">
-    <h1>blastoise</h1>
+    <h1>Pokedéx</h1>
     <div class="submit">
       <TextInput v-model="valor" @keyup.enter="pesquisar()" />
-      <Button name="Buscar Pokemon" @click="pesquisar()" />
+      <Button name="Search Pokemon" @click="pesquisar()" />
     </div>
     <div v-show="img" class="pokemonContainer">
       <img :src="img" alt="" class="pokemonImage" />
@@ -21,7 +21,7 @@
       <div class="pokemonStats">
         <div>
           <div class="pokemonDataTable" v-show="ability">
-            <p class="dataTitle">Habilidades:</p>
+            <p class="dataTitle">Skills:</p>
             <p
               class="pokemonData"
               v-for="(ab, key) in ability"
@@ -33,7 +33,7 @@
           </div>
         </div>
         <div class="pokemonDataTable" v-show="weight">
-          <p class="dataTitle">Peso:</p>
+          <p class="dataTitle">Weight:</p>
           <p class="pokemonData" v-show="weight">{{ weight }}kg</p>
         </div>
         <div class="pokemonDataTable" v-show="weight">
@@ -87,25 +87,25 @@ export default {
   },
   methods: {
     async pesquisar() {
-      const req = await fetch(
-        `https://pokeapi.co/api/v2/pokemon/${this.valor}`
+      const reqPokemon = await fetch(
+        `https://pokeapi.co/api/v2/pokemon/${this.valor.toLowerCase()}`
       );
-      const res = await req.json();
+      const resPokemon = await reqPokemon.json();
 
       //Pegando a cor predominante do pokemon
-      const backgroundColor = await analyze(res.sprites.front_default);
+      const backgroundColor = await analyze(resPokemon.sprites.front_default);
       this.bgColor = await backgroundColor[0].color;
 
-      //Passando os valores da api para as variáveis
-      this.name = res.name;
-      this.ability = res.abilities.map((value) => value.ability);
-      this.type = res.types.map((value) => value.type);
-      this.height = (res.height * 10) / 100;
-      this.img = res.sprites.other["official-artwork"].front_default;
-      this.weight = res.weight / 10;
-      this.order = res.order;
-      this.statsValue = res.stats.map((value) => value);
-      this.statsName = res.stats.map((value) => value.stat);
+      //Passando os valoresPokemon da api para as variáveis
+      this.name = resPokemon.name;
+      this.ability = resPokemon.abilities.map((value) => value.ability);
+      this.type = resPokemon.types.map((value) => value.type);
+      this.height = (resPokemon.height * 10) / 100;
+      this.img = resPokemon.sprites.other["official-artwork"].front_default;
+      this.weight = resPokemon.weight / 10;
+      this.order = resPokemon.order;
+      this.statsValue = resPokemon.stats.map((value) => value);
+      this.statsName = resPokemon.stats.map((value) => value.stat);
     },
   },
   mounted() {},
@@ -139,8 +139,6 @@ export default {
   justify-content: space-evenly;
   width: 280px;
   margin: 0 auto;
-}
-.pokemonStatsTableValue {
 }
 .pokemonStats p {
   margin: 5px;
@@ -183,7 +181,7 @@ export default {
   font-size: 24px;
 }
 .home {
-  min-height: 200px;
+  min-height: 150px;
   border-style: solid;
   width: 500px;
   margin: 0 auto;
