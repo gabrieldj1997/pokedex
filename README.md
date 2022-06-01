@@ -1,19 +1,12 @@
-# pokedex
+# Pokedéx
+O Pokedéx, como o próprio nome já diz, é um app criado para simular uma pokedéx, assim que você digitar o nome do pokemom, será trago a foto e todas as características principais do pokemon.
 
-## Project setup
-```
-npm install
-```
+## Ferramentas usadas na criação
+Foram utilizados VueJS, CSS requisições API.
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Modo de instalação:
+1 - Clonar ou baixar o repositório
+<br />
+2 - Utilizar "npm install" para instalar as dependências
+<br />
+3 - Utilizar o "npm run serve" para rodar o projeto
