@@ -4,9 +4,6 @@
     <h1>Pokedéx</h1>
     <div class="submit">
       <TextInput v-model="valor" @keyup.enter="pesquisar()" @keyup.capture="listaPokemon()" />
-      <div id="pokemonList" @click="pokemonSelecionado()"><ul>
-
-      </ul></div>
       <Button name="Search Pokemon" @click="pesquisar()" />
     </div>
     <div v-show="img" class="pokemonContainer">
@@ -111,13 +108,20 @@ export default {
         const nomePokemon = resPokemon.results.map((value) => value.name);
         window.localStorage.setItem("pokemons", JSON.stringify(nomePokemon));
       }
+      if (this.valor.length >= 3) {
+        const pokemons = JSON.parse(window.localStorage.getItem("pokemons")).filter(value=>{
+          return value.toLowerCase().includes(this.valor.toLowerCase())
+        })
+        console.log(pokemons)
+      }
     }
   },
   mounted() { },
   components: {
     Button,
     TextInput,
-    TextInput
+    TextInput,
+    AutoComplete
 },
 };
 </script>
