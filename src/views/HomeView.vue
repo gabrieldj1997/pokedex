@@ -121,6 +121,8 @@ export default {
           option.value = value
           pokemonList.appendChild(option)
         })
+      }else{
+        document.querySelector('#nomePokemon').innerHTML = ''
       }
     }
   },
