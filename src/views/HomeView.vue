@@ -3,8 +3,9 @@
   <div class="home">
     <h1>Pokedéx</h1>
     <div class="submit">
-      <TextInput v-model="valor" @keyup.enter="pesquisar()" @keyup.capture="listaPokemon()" />
-      <Button name="Search Pokemon" @click="pesquisar()" />
+      <TextInput v-model="valor" @keyup.enter="pesquisar()" @keyup.capture="listaPokemon()"  list="nomePokemon"/>
+      <datalist id="nomePokemon"></datalist>
+      <Button name="Procurar Pokemon" @click="pesquisar()"></button>
     </div>
     <div v-show="img" class="pokemonContainer">
       <img :src="img" alt="" class="pokemonImage" />
@@ -78,7 +79,7 @@ export default {
   },
   methods: {
     async pesquisar() {
-      document.querySelector('#pokemonList ul').innerHTML = ''
+      document.querySelector('#nomePokemon').innerHTML = ''
       const reqPokemon = await fetch(
         `https://pokeapi.co/api/v2/pokemon/${this.valor.toLowerCase()}`
       );
@@ -113,15 +114,20 @@ export default {
           return value.toLowerCase().includes(this.valor.toLowerCase())
         })
         console.log(pokemons)
+        const pokemonList = document.querySelector('#nomePokemon')
+        pokemonList.innerHTML = ''
+        pokemons.forEach(value=>{
+          const option = document.createElement('option')
+          option.value = value
+          pokemonList.appendChild(option)
+        })
       }
     }
   },
   mounted() { },
   components: {
     Button,
-    TextInput,
-    TextInput,
-    AutoComplete
+    TextInput
 },
 };
 </script>
